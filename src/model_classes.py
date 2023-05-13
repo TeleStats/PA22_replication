@@ -17,18 +17,19 @@ from torchvision.transforms import functional as F
 from torchvision import transforms
 from torch.nn.functional import normalize as th_norm
 
-#For FaceNet
-import os
-import re
-import tensorflow.compat.v1 as tf
-tf.disable_eager_execution()
-
-from tensorflow.compat.v1 import ConfigProto
-from tensorflow.compat.v1 import InteractiveSession
-config = ConfigProto(device_count={'GPU': 0})
-# config.gpu_options.allow_growth = True
-# session = InteractiveSession(config=config)
-from tensorflow.python.platform import gfile
+# Deactivate for Replication package because the dependencies are a huge (huge) pain
+# #For FaceNet
+# import os
+# import re
+# import tensorflow.compat.v1 as tf
+# tf.disable_eager_execution()
+#
+# from tensorflow.compat.v1 import ConfigProto
+# from tensorflow.compat.v1 import InteractiveSession
+# config = ConfigProto(device_count={'GPU': 0})
+# # config.gpu_options.allow_growth = True
+# # session = InteractiveSession(config=config)
+# from tensorflow.python.platform import gfile
 
 from config import get_parser
 from external import model_yolo5
