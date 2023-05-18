@@ -7,6 +7,7 @@ import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn'
 from pathlib import Path
 from sklearn.metrics import average_precision_score
+# import wandb
 
 from config import get_parser
 from external.coco_evaluation import get_coco_metrics_tpfpfn, get_coco_summary, get_coco_metrics, BoundingBox, BBFormat, BBType, CoordinatesType
@@ -1041,7 +1042,7 @@ def main_train(flag_det=False):
     df_metrics = face_metrics.compute_AP(gt_boxes, det_boxes)
 
     # # wandb logs
-    # if not flag_det:
+    if not flag_det:
     #     min_date = '/'.join(face_metrics.res_demo_df_metrics['source'].min().split('_')[:3])
     #     max_date = '/'.join(face_metrics.res_demo_df_metrics['source'].max().split('_')[:3])
     #     # run.log({f"Metrics from {min_date}-{max_date}": df_metrics})
@@ -1050,10 +1051,10 @@ def main_train(flag_det=False):
     #     else:
     #         run.log({f"{args.channel}-{args.modifier}": df_metrics})
     #
-    #     if len(args.year) == 0:
-    #         # Only save df when all the info is available
-    #         df_save = face_metrics.transform_df_train_to_gt(face_metrics.res_demo_df_metrics, gt_boxes, det_boxes)
-    #         face_metrics.save_df_all_info(df_save)
+        if len(args.year) == 0:
+            # Only save df when all the info is available
+            df_save = face_metrics.transform_df_train_to_gt(face_metrics.res_demo_df_metrics, gt_boxes, det_boxes)
+            face_metrics.save_df_all_info(df_save)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,4 @@
 import os
-import sys
-sys.path.append(os.getcwd())
 
 import pandas as pd
 from pathlib import Path
@@ -16,6 +14,9 @@ from utils import convert_str_to_date, filter_path_list_by_date, choose_n_pols
 
 def main():
     df_pol = pd.read_pickle(MODELS_PKL_PATH)
+    # No distractor information (for PA22 results replication)
+    mask_id = df_pol["ID"].str.startswith('distractor_')
+    df_pol = df_pol[~mask_id]
     df_pol = choose_n_pols(df_pol, num=0)
     df_pol['frame'] = '-1'  # If not initialized treats frames as floats and mismatches on metrics
     df_res = None
@@ -42,7 +43,7 @@ def main():
             # Joint embeddings from detections and politicians
             df = pd.concat((df_pol, df_emb)).reset_index()
 
-            if BASENAME == 'fcg' or 'fcgNT':
+            if BASENAME == 'fcg' or BASENAME == 'fcgNT':
                 # e.g. fcg_average_vote
                 hier_method = METHOD_ARGS[1]
                 if len(METHOD_ARGS) > 2:
