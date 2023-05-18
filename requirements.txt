@@ -6,7 +6,7 @@ pyyaml
 seaborn
 gdown
 torch==1.13.1
-torchvision==0.10.0
+torchvision
 facenet_pytorch
 face-detection==0.2.1
 numpy==1.19.2
