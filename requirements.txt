@@ -12,5 +12,5 @@ face-detection==0.2.1
 numpy==1.19.2
 thop==0.0.31.post2005241907
 scikit-learn==0.24.2
-scipy==1.7.0
+scipy
 KDEpy==1.1.0
