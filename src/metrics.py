@@ -1,4 +1,8 @@
 # Here we should have all the methods for the different metrics
+import os
+import sys
+sys.path.append(os.getcwd())
+
 import copy
 import json
 import numpy as np
