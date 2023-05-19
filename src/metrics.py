@@ -1066,7 +1066,7 @@ def main_train(flag_det=False):
             # Print metrics (from generate_latex_tables.py)
             metrics_generator = MetricsGenerator()
             kwargs = {
-                "mod_feat": args.mod_feat
+                "mod_feat": f"{args.mod_feat}-{MODIFIER}" if MODIFIER != "" else f"{args.mod_feat}"
             }
             res_statistics = metrics_generator.get_statistics_object(args.detector, args.channel, **kwargs)
             df_res = res_statistics.res_df_all_info_from_to
