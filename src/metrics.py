@@ -1090,7 +1090,7 @@ if __name__ == "__main__":
     if len(args.year) > 0:
         YEARS_TO_TEST = args.year
     else:
-        YEARS_TO_TEST = [str(year_path.stem) for year_path in RES_PATH.iterdir() if year_path.is_dir()]
+        YEARS_TO_TEST = sorted([str(year_path.stem) for year_path in RES_PATH.iterdir() if year_path.is_dir()])
 
     # Weights and biases logger
     # group_name = args.mod_feat.upper()
