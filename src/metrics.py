@@ -861,8 +861,9 @@ class FaceMetrics:
                 print(f"{coco_pol[pol]['class']}: TP={tp_all}, FN={fn_all}, "
                       f"R={round(rec, 3)}, GT={coco_pol[pol]['total positives']}")
             else:
-                print(f"{coco_pol[pol]['class']}: AP={round(coco_pol[pol]['AP']*100, 1)}, P={round(prec, 2)}, "
-                      f"R={round(rec, 2)}, F1={round(f1, 3)}, GT={coco_pol[pol]['total positives']}")
+                pass  # For PA replication package
+                # print(f"{coco_pol[pol]['class']}: AP={round(coco_pol[pol]['AP']*100, 1)}, P={round(prec, 2)}, "
+                #       f"R={round(rec, 2)}, F1={round(f1, 3)}, GT={coco_pol[pol]['total positives']}")
 
         prec_all = tp_all / (fp_all + tp_all)
         rec_all = tp_all / (fn_all + tp_all)
@@ -881,9 +882,12 @@ class FaceMetrics:
                               columns=cols_wandb)
         df_metrics = pd.concat([df_all, df_metrics], ignore_index=True)
 
-        print(f"Overall: AP50={round(coco_ap_glob['AP50']*100, 1)}, APS={round(coco_ap_glob['APsmall']*100, 1)}, "
-              f"APM={round(coco_ap_glob['APmedium']*100, 1)}, APL={round(coco_ap_glob['APlarge']*100, 1)}, "
-              f"P={round(prec_all, 2)}, "f"R={round(rec_all, 2)}, F1={round(f1_all, 3)}, GT={gt_all} \n")
+        # print(f"Overall: AP50={round(coco_ap_glob['AP50']*100, 1)}, APS={round(coco_ap_glob['APsmall']*100, 1)}, "
+        #       f"APM={round(coco_ap_glob['APmedium']*100, 1)}, APL={round(coco_ap_glob['APlarge']*100, 1)}, "
+        #       f"P={round(prec_all, 2)}, "f"R={round(rec_all, 2)}, F1={round(f1_all, 3)}, GT={gt_all} \n")
+
+        # For PA replication package
+        print(f"P={round(prec_all, 2)}, "f"R={round(rec_all, 2)}, F1={round(f1_all, 3)}\n")
 
         return df_metrics
 
@@ -1040,8 +1044,8 @@ def main_train(flag_det=False):
                 face_metrics.set_res_file(str(result_file), year=year_str, filter_results=True)
             face_metrics.fuse_res_df()
 
-    face_metrics.print_detection_percentages()
-    face_metrics.print_bboxes_size()
+    # face_metrics.print_detection_percentages()
+    # face_metrics.print_bboxes_size()
     gt_boxes, det_boxes = face_metrics.build_train_metrics(flag_det=flag_det)
     df_metrics = face_metrics.compute_AP(gt_boxes, det_boxes)
 
