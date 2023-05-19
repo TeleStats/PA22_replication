@@ -68,7 +68,7 @@ class FCG:
             label_idx = np.argmin(dist_matrix)
             if dist_matrix.min() < thresh:
                 label = model_labels[label_idx]
-                dist = dist_matrix[label_idx]
+                dist = dist_matrix[label_idx][0]
 
         elif method == 'vote' or method == 'vote-ap':
             # Compare models with all the elements of the tracklet and do a majority vote (> 50%)
