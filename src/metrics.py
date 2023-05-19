@@ -16,6 +16,7 @@ from sklearn.metrics import average_precision_score
 from config import get_parser
 from external.coco_evaluation import get_coco_metrics_tpfpfn, get_coco_summary, get_coco_metrics, BoundingBox, BBFormat, BBType, CoordinatesType
 from utils import convert_str_to_date, filter_path_list_by_date
+from generate_latex_tables_PA22 import MetricsGenerator
 
 
 class GTReader:
@@ -423,19 +424,19 @@ class FaceMetrics:
         mask_frames = self.res_df_processed['ID'].isin(pol_filtered)
         # Filter results with the predefined masks
         self.res_df_processed = self.res_df_processed[mask_frames]
-        # if MODIFIER == 'sf':
-        # Test to check performance just checking results against existing GT (as in Stanford paper)
-        # Filter to get only frames inside GT
-        source_gt_files = self.train_gt_df['source'].unique()
-        mask_source_gt = self.res_df_processed['source'].isin(source_gt_files)
-        self.res_df_processed = self.res_df_processed[mask_source_gt]
-        s_file = self.res_df_processed['source'].unique()
-        if s_file.size > 0:
-            source_gt_frames = self.train_gt_df[self.train_gt_df['source'] == s_file[0]]['frame'].unique()
-            source_gt_frames = [int(s) for s in source_gt_frames]
-            mask_source_gt_frames = self.res_df_processed['frame'].isin(source_gt_frames)
-
-            self.res_df_processed = self.res_df_processed[mask_source_gt_frames]
+        if MODIFIER == 'sf':
+            # Test to check performance just checking results against existing GT (as in Stanford paper)
+            # Filter to get only frames inside GT
+            source_gt_files = self.train_gt_df['source'].unique()
+            mask_source_gt = self.res_df_processed['source'].isin(source_gt_files)
+            self.res_df_processed = self.res_df_processed[mask_source_gt]
+            s_file = self.res_df_processed['source'].unique()
+            if s_file.size > 0:
+                source_gt_frames = self.train_gt_df[self.train_gt_df['source'] == s_file[0]]['frame'].unique()
+                source_gt_frames = [int(s) for s in source_gt_frames]
+                mask_source_gt_frames = self.res_df_processed['frame'].isin(source_gt_frames)
+    
+                self.res_df_processed = self.res_df_processed[mask_source_gt_frames]
 
     def fuse_res_df(self):
         if self.res_demo_df_metrics is None:
@@ -893,10 +894,10 @@ class FaceMetrics:
 
     def save_df_all_info(self, df):
         # Save df with all info for further analysis
-        if args.modifier == "":
+        if MODIFIER == "":
             save_path = SAVE_METRICS_PATH / f'{args.detector}-{args.feats}-{args.mod_feat}.pkl'
         else:
-            save_path = SAVE_METRICS_PATH / f'{args.detector}-{args.feats}-{args.mod_feat}-{args.modifier}.pkl'
+            save_path = SAVE_METRICS_PATH / f'{args.detector}-{args.feats}-{args.mod_feat}-{MODIFIER}.pkl'
 
         os.makedirs(str(save_path.parent), exist_ok=True)
         # Add extra data
@@ -1047,7 +1048,6 @@ def main_train(flag_det=False):
     # face_metrics.print_detection_percentages()
     # face_metrics.print_bboxes_size()
     gt_boxes, det_boxes = face_metrics.build_train_metrics(flag_det=flag_det)
-    df_metrics = face_metrics.compute_AP(gt_boxes, det_boxes)
 
     # # wandb logs
     if not flag_det:
@@ -1063,6 +1063,16 @@ def main_train(flag_det=False):
             # Only save df when all the info is available
             df_save = face_metrics.transform_df_train_to_gt(face_metrics.res_demo_df_metrics, gt_boxes, det_boxes)
             face_metrics.save_df_all_info(df_save)
+            # Print metrics (from generate_latex_tables.py)
+            metrics_generator = MetricsGenerator()
+            kwargs = {
+                "mod_feat": args.mod_feat
+            }
+            res_statistics = metrics_generator.get_statistics_object(args.detector, args.channel, **kwargs)
+            df_res = res_statistics.res_df_all_info_from_to
+            opt_correct = True if args.channel in ['CNNW', 'FOXNEWSW', 'MSNBCW'] else False
+            prec_, rec_, f1_ = metrics_generator.compute_metrics(df_res, key_filter='Overall', opt_correct=opt_correct)
+            print(f"P={round(prec_, 2)}, R={round(rec_, 2)}, F1={round(f1_, 3)}")
 
 
 if __name__ == "__main__":
@@ -1071,7 +1081,7 @@ if __name__ == "__main__":
 
     FROM_DATE = convert_str_to_date(args.from_date)
     TO_DATE = convert_str_to_date(args.to_date)
-    MODIFIER = args.modifier
+    MODIFIER = "sf"  # For PA22 replication package
     # RES_FILE = Path('data/results/results_sample.csv')
     RES_FILE = Path('data/results/results_haolin_segment_newformat.csv')
     # RES_FILE = Path('data/results/2012_12_04_19_00.csv')
