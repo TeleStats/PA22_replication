@@ -172,11 +172,18 @@ def generate_df_from_dict(table_dict):
     # Calculate average values
     avg_values = df.groupby(['Detector', 'Classifier']).mean().reset_index()
     # Specify the decimal places for each column
-    decimal_places = {
-        'P': 2,
-        'R': 2,
-        'F1': 3
-    }
+    if FLAG_DETECTION_TABLE:
+        decimal_places = {
+            'P': 4,
+            'R': 4,
+            'F1': 4
+        }
+    else:
+        decimal_places = {
+            'P': 2,
+            'R': 2,
+            'F1': 3
+        }
     # Round the mean values based on the specified decimal places
     avg_values = avg_values.round(decimal_places)
     # Add "Overall" channel
@@ -190,6 +197,27 @@ def generate_df_from_dict(table_dict):
 
     return df
 
+
+def reorder_df_dets(df):
+    # Give order to the df based on the Latex table 3 (detection error) in PA22
+    # Extract the channel names from column names
+    channel_columns = sorted(list(set([col.split('_')[0] for col in df.columns if '_' in col])))
+    # Move "Overall" to the beginning of the list
+    channel_columns.remove('Overall')
+    channel_columns.insert(0, 'Overall')
+    # For quick modification
+    # channel_columns = ['Overall', 'news7-lv', 'hodost-lv']
+    # channel_columns = ['CNNW', 'FOXNEWSW', 'MSNBCW', 'news7-lv', 'hodost-lv']  # For tracking vs. no tracking performance
+    channel_columns = ['CNNW', 'FOXNEWSW', 'MSNBCW', 'news7-lv', 'hodost-lv', 'Overall']  # For detector performance
+    # Specify column order
+    chan_list = [[f'{chan}_R'] for chan in channel_columns]
+    column_order = ['Detector'] + [item for sublist in chan_list for item in sublist]
+
+    # Reindex the DataFrame with the desired column order
+    df_ = df.reindex(columns=column_order)
+    df_[[item for sublist in chan_list for item in sublist]] = (1 - df_[[item for sublist in chan_list for item in sublist]]) * 100
+
+    return df_.round(2)
 
 def reorder_df(df):
     # Give order to the df based on the Latex tables order
@@ -218,15 +246,26 @@ def generate_table_from_dict(table_dict):
     df = generate_df_from_dict(table_dict)
 
     # Pivot the DataFrame
-    pivot_df = df.pivot_table(index=['Detector', 'Classifier'], columns='Channel', values=['P', 'R', 'F1']).reset_index()
+    if FLAG_DETECTION_TABLE:
+        pivot_df = df.pivot_table(index=['Detector'], columns='Channel', values=['R']).reset_index()
+    else:
+        pivot_df = df.pivot_table(index=['Detector', 'Classifier'], columns='Channel', values=['P', 'R', 'F1']).reset_index()
 
     # For tracking vs. no tracking performance
-    pivot_df = pivot_df.sort_values(by=['Detector', 'Classifier']) if FLAG_TRACKING_TABLE else pivot_df.sort_values(by='Classifier')
+    if FLAG_TRACKING_TABLE:
+        pivot_df = pivot_df.sort_values(by=['Detector', 'Classifier'])
+    elif FLAG_DETECTION_TABLE:
+        pivot_df = pivot_df.sort_values(by='Detector')
+    else:
+        pivot_df = pivot_df.sort_values(by='Classifier')
 
     pivot_df = pivot_df.sort_values(by='Channel', axis=1)
     # Flatten column names
     pivot_df.columns = [f'{col[1]}_{col[0]}' if col[1] != '' else col[0] for col in pivot_df.columns]
-    pivot_df = reorder_df(pivot_df)
+    if FLAG_DETECTION_TABLE:
+        pivot_df = reorder_df_dets(pivot_df)
+    else:
+        pivot_df = reorder_df(pivot_df)
     # Generate LaTeX table
     latex_table = pivot_df.to_latex(index=False)
 
@@ -270,9 +309,12 @@ def main():
                     opt_correct = True if res_statistics.channel in ['CNNW', 'FOXNEWSW', 'MSNBCW'] else False
                     prec_, rec_, f1_ = metrics_generator.compute_metrics(df_res, opt_correct=opt_correct)
                     # Put information in dictionary
-                    table_dict[channel][detector][feat][classifier]['P'] = round(prec_, 2)
-                    table_dict[channel][detector][feat][classifier]['R'] = round(rec_, 2)
-                    table_dict[channel][detector][feat][classifier]['F1'] = round(f1_, 3)
+                    # table_dict[channel][detector][feat][classifier]['P'] = round(prec_, 2)
+                    # table_dict[channel][detector][feat][classifier]['R'] = round(rec_, 3)
+                    # table_dict[channel][detector][feat][classifier]['F1'] = round(f1_, 3)
+                    table_dict[channel][detector][feat][classifier]['P'] = prec_
+                    table_dict[channel][detector][feat][classifier]['R'] = rec_
+                    table_dict[channel][detector][feat][classifier]['F1'] = f1_
 
                     print(f"P={round(prec_, 2)}, R={round(rec_, 2)}, F1={round(f1_, 3)}")
                     # res_latex = f"{round(prec_, 2)} & {round(rec_, 2)} & {round(f1_, 3)}"
@@ -281,17 +323,18 @@ def main():
 
 
 if __name__ == "__main__":
-    CHANNELS = ["news7-lv", "hodost-lv"]
+    # CHANNELS = ["news7-lv", "hodost-lv"]
     # CHANNELS = ["CNNW", "FOXNEWSW", "MSNBCW"]
-    # CHANNELS = ["CNNW", "FOXNEWSW", "MSNBCW", "news7-lv", "hodost-lv"]
+    CHANNELS = ["CNNW", "FOXNEWSW", "MSNBCW", "news7-lv", "hodost-lv"]
     DETECTORS = ["yolo", "dfsd", "mtcnn"]
     # DETECTORS = ["yolo"]
     FEATS = ["resnetv1"]
-    # CLASSIFIERS = ["fcg_average_vote"]
-    CLASSIFIERS = ["fcg_average_vote", "fcg_average_centroid", "knn_3"]
+    CLASSIFIERS = ["fcg_average_vote"]
+    # CLASSIFIERS = ["fcg_average_vote", "fcg_average_centroid", "knn_3"]
     # CLASSIFIERS = ["fcg_average_vote", "fcgNT_average_vote"]
     # MODIFIER = ''
     MODIFIER = 'sf'
     FLAG_TRACKING_TABLE = False
+    FLAG_DETECTION_TABLE = True
 
     main()
