@@ -1050,7 +1050,7 @@ def main_train(flag_det=False):
     gt_boxes, det_boxes = face_metrics.build_train_metrics(flag_det=flag_det)
 
     # # wandb logs
-    if not flag_det:
+    # if not flag_det:
     #     min_date = '/'.join(face_metrics.res_demo_df_metrics['source'].min().split('_')[:3])
     #     max_date = '/'.join(face_metrics.res_demo_df_metrics['source'].max().split('_')[:3])
     #     # run.log({f"Metrics from {min_date}-{max_date}": df_metrics})
@@ -1059,20 +1059,23 @@ def main_train(flag_det=False):
     #     else:
     #         run.log({f"{args.channel}-{args.modifier}": df_metrics})
     #
-        if len(args.year) == 0:
-            # Only save df when all the info is available
-            df_save = face_metrics.transform_df_train_to_gt(face_metrics.res_demo_df_metrics, gt_boxes, det_boxes)
-            face_metrics.save_df_all_info(df_save)
-            # Print metrics (from generate_latex_tables.py)
-            metrics_generator = MetricsGenerator()
-            kwargs = {
-                "mod_feat": f"{args.mod_feat}-{MODIFIER}" if MODIFIER != "" else f"{args.mod_feat}"
-            }
-            res_statistics = metrics_generator.get_statistics_object(args.detector, args.channel, **kwargs)
-            df_res = res_statistics.res_df_all_info_from_to
-            opt_correct = True if args.channel in ['CNNW', 'FOXNEWSW', 'MSNBCW'] else False
-            prec_, rec_, f1_ = metrics_generator.compute_metrics(df_res, key_filter='Overall', opt_correct=opt_correct)
+    if len(args.year) == 0:
+        # Only save df when all the info is available
+        df_save = face_metrics.transform_df_train_to_gt(face_metrics.res_demo_df_metrics, gt_boxes, det_boxes)
+        face_metrics.save_df_all_info(df_save)
+        # Print metrics (from generate_latex_tables.py)
+        metrics_generator = MetricsGenerator()
+        kwargs = {
+            "mod_feat": f"{args.mod_feat}-{MODIFIER}" if MODIFIER != "" else f"{args.mod_feat}"
+        }
+        res_statistics = metrics_generator.get_statistics_object(args.detector, args.channel, **kwargs)
+        df_res = res_statistics.res_df_all_info_from_to
+        opt_correct = True if args.channel in ['CNNW', 'FOXNEWSW', 'MSNBCW'] else False
+        prec_, rec_, f1_ = metrics_generator.compute_metrics(df_res, key_filter='Overall', opt_correct=opt_correct)
+        if not flag_det:
             print(f"P={round(prec_, 2)}, R={round(rec_, 2)}, F1={round(f1_, 3)}")
+        else:
+            print(f"Missed detections={round((1-rec_)*100, 2)}%")
 
 
 if __name__ == "__main__":
