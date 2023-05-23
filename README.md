@@ -68,7 +68,7 @@ The annotations for the US data (CNN, FOX, MSNBC) used to support the findings o
 
 Our code is tested with python3.8, and the libraries required are stated in "requirements.txt". 
 
-We provide a **google colab notebook** to reproduce the experiments of this paper, and strongly recommend following it.
+We provide a [**google colab notebook**]((https://colab.research.google.com/github/TeleStats/PA22_replication/blob/main/PA22_replication.ipynb)) to reproduce the experiments of this paper, and strongly recommend following it.
 
 ## Description of programs/code
 
