@@ -15,7 +15,7 @@ contributors:
 ## Overview
 
 The code in this replication package for "Face detection, tracking, and classification from large-scale news archives for analysis of key political figures" using Python.
-We provide a google colab notebook with the instructions to reproduce the experiments from tables 3-6 and figures 5-6.
+We provide a [google colab notebook](https://colab.research.google.com/github/TeleStats/PA22_replication/blob/main/PA22_replication.ipynb) with the instructions to reproduce the experiments from tables 3-6 and figures 5-6.
 
 The replicator should be able to replicate the results for the different configurations by specifying **channel**, **detector**, and **classifier** presented in the paper.
 
@@ -68,7 +68,7 @@ The annotations for the US data (CNN, FOX, MSNBC) used to support the findings o
 
 Our code is tested with python3.8, and the libraries required are stated in "requirements.txt". 
 
-We provide a [**google colab notebook**]((https://colab.research.google.com/github/TeleStats/PA22_replication/blob/main/PA22_replication.ipynb)) to reproduce the experiments of this paper, and strongly recommend following it.
+We provide a [**google colab notebook**](https://colab.research.google.com/github/TeleStats/PA22_replication/blob/main/PA22_replication.ipynb) to reproduce the experiments of this paper, and strongly recommend following it.
 
 ## Description of programs/code
 
@@ -87,7 +87,7 @@ The code is licensed under a MIT license. See [LICENSE.txt](LICENSE.txt) for det
 ## Instructions to Replicators
 
 Classification should be run for all the different configurations (detector-feats-classifier), e.g. yolo-resnetv1-fcg_average_vote. 
-The step-by-step instructions are defined in the google colab notebook, please follow those in order to reproduce our results.
+The step-by-step instructions are defined in the [google colab notebook](https://colab.research.google.com/github/TeleStats/PA22_replication/blob/main/PA22_replication.ipynb), please follow those in order to reproduce our results.
 
 ## List of tables and programs
 
