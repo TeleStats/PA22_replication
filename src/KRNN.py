@@ -88,8 +88,8 @@ class KRNNSolver:
                     self.dict_pol_tensor[k_pol_adapt]['emb'] = torch.cat([self.dict_pol_tensor[k_pol_adapt]['emb'], emb_det_tensor])
 
             # source,ID,frame,cx,cy,w,h,prob_det,dist_ID
-            df_res['ID'][mask_frame] = labels
-            df_res['dist_ID'][mask_frame] = emb_dist_list
+            df_res[mask_frame]['ID'] = labels
+            df_res[mask_frame]['dist_ID'] = emb_dist_list
 
         return df_res
 
