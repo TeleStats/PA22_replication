@@ -81,7 +81,7 @@ def main():
     channels_list = (channel_path.stem for channel_path in ROOT_DATASET_PATH.iterdir() if channel_path.is_dir())
     channels_list = list(set(datasets_list) & set(channels_list))
     # Debug
-    channels_list = ['CNNW']
+    # channels_list = ['CNNW']
 
     for channel_name in channels_list:
         print(f"{channel_name}")
