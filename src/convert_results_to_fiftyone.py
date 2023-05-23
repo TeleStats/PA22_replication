@@ -1,11 +1,9 @@
 # Script to convert the results for different datasets and add them to a "fiftyone" dataset
 # Resources: https://voxel51.com/docs/fiftyone/tutorials/evaluate_detections.html
 
-import numpy as np
+import argparse
 from pathlib import Path
-
 import pandas as pd
-from PIL import Image
 import fiftyone as fo
 
 import os
@@ -33,8 +31,7 @@ def add_res_to_fiftyone_samples(dataset, res_path, method_name):
             img_source = img_info[0]
             year_str = img_source.split('_')[0]
             frame = int(img_info[-1])
-            # res_csv_path = res_path / f"{year_str}/{img_source}.csv"
-            res_csv_path = res_path / f"{year_str}/{img_source}.pkl"
+            res_csv_path = res_path / f"{year_str}/{img_source}.csv"
             if not res_csv_path.exists():
                 continue
 
@@ -44,18 +41,15 @@ def add_res_to_fiftyone_samples(dataset, res_path, method_name):
 
             # Only open in case the image source changed
             if prev_csv != res_csv_path:
-                # df_res = pd.read_csv(res_csv_path)
-                df_res = pd.read_pickle(res_csv_path)
+                df_res = pd.read_csv(res_csv_path)
             # Filter by frame
             df = df_res[df_res['frame'] == frame]
             if df.empty:
                 continue
 
             detections = []
-            embeddings = []  # Adding embeddings in the detections directly is not yet supported
             for _, row in df.iterrows():
                 label_id = str(row['ID']).split('_')[-1]
-                emb = row['emb']
                 # Use dist_id as a "confidence" score in order to establish an order
                 dist_id = row['dist_ID']
                 conf = 1 - dist_id
@@ -70,17 +64,13 @@ def add_res_to_fiftyone_samples(dataset, res_path, method_name):
                                  label_id=label_id, area=bbox_area)  #label_id is a custom attribute
                 )
                 if row['ID'] not in classes:
-                    classes.append(row['ID'])
-
-                embeddings.append(emb)
+                    classes.append(str(row['ID']))
 
             sample[f"{method_name}"] = fo.Detections(detections=detections)
-            emb_glob[sample['id']] = np.asarray(embeddings)
 
             sample.save()
 
     dataset.default_classes = classes
-    dataset.set_values("embeddings", emb_glob, key_field="id")
     dataset.save()
 
 
@@ -91,7 +81,7 @@ def main():
     channels_list = (channel_path.stem for channel_path in ROOT_DATASET_PATH.iterdir() if channel_path.is_dir())
     channels_list = list(set(datasets_list) & set(channels_list))
     # Debug
-    # channels_list = ['CNNW']
+    channels_list = ['CNNW']
 
     for channel_name in channels_list:
         print(f"{channel_name}")
@@ -104,11 +94,17 @@ def main():
 
 
 if __name__ == "__main__":
+    # Config
+    parser = argparse.ArgumentParser(description='Populate fiftyone dataset')
+    parser.add_argument('--detector', type=str, default='yolo', help='Face detector. MTCNN, DFSD, YOLO-face.')
+    parser.add_argument('--feats', type=str, default='resnetv1', help='Feature extractor. ResnetV1.')
+    parser.add_argument('--mod_feat', type=str, default='fcg_average_vote', help='Modify feature combination. single, min_dist, all_dist, mean_dist, min_plus_mean_dist, all_plus_mean_dist')
+    args = parser.parse_args()
+
     ROOT_DATASET_PATH = Path(f"data/dataset/train")
     ROOT_RES_PATH = Path("data/results")
-    # Config
-    DETECTOR = "yolo"
-    FEATS = "resnetv1"
-    CLASSIFIER = "fcg_average_vote"
+    DETECTOR = args.detector
+    FEATS = args.feats
+    CLASSIFIER = args.mod_feat
 
     main()
