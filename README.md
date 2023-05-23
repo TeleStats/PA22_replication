@@ -36,7 +36,7 @@ The experiments presented in the paper can be reproduced by using this intermedi
 
 ### License for Data
 
-*Example:* The data are licensed under a MIT license. See LICENSE.txt for details.
+The data are licensed under a MIT license. See LICENSE.txt for details.
 
 
 ### Summary of Availability
