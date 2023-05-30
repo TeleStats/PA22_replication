@@ -105,8 +105,9 @@ class FCG:
             mask_clust = df_cluster_labels['clust_ID'] == clust
             embs = np.asarray(df_cluster_labels['emb'][mask_clust].to_list())
             label, dist = self.assign_label(X_models, embs, model_labels, method=self.classify_method, thresh=thresh, perc_votes=perc_votes)
-            df_res[mask_clust]['ID'] = label
-            df_res[mask_clust]['dist_ID'] = dist
+            # Ensure that we are modifying df_res and not generating a copy
+            df_res.loc[mask_clust, 'ID'] = label
+            df_res.loc[mask_clust, 'dist_ID'] = dist
 
         return df_res
 
