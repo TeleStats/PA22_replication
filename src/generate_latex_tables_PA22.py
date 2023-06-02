@@ -323,18 +323,18 @@ def main():
 
 
 if __name__ == "__main__":
-    # CHANNELS = ["news7-lv", "hodost-lv"]
+    CHANNELS = ["news7-lv", "hodost-lv"]
     # CHANNELS = ["CNNW", "FOXNEWSW", "MSNBCW"]
-    CHANNELS = ["CNNW", "FOXNEWSW", "MSNBCW", "news7-lv", "hodost-lv"]
+    # CHANNELS = ["CNNW", "FOXNEWSW", "MSNBCW", "news7-lv", "hodost-lv"]
     DETECTORS = ["yolo", "dfsd", "mtcnn"]
     # DETECTORS = ["yolo"]
     FEATS = ["resnetv1"]
-    CLASSIFIERS = ["fcg_average_vote"]
-    # CLASSIFIERS = ["fcg_average_vote", "fcg_average_centroid", "knn_3"]
+    # CLASSIFIERS = ["fcg_average_vote"]
+    CLASSIFIERS = ["fcg_average_vote", "fcg_average_centroid", "knn_3"]
     # CLASSIFIERS = ["fcg_average_vote", "fcgNT_average_vote"]
     # MODIFIER = ''
     MODIFIER = 'sf'
     FLAG_TRACKING_TABLE = False
-    FLAG_DETECTION_TABLE = True
+    FLAG_DETECTION_TABLE = False
 
     main()

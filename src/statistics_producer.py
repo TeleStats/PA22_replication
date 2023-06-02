@@ -37,6 +37,7 @@ class ResStatistics:
         self.detector = kwargs.get('detector', 'yolo')
         self.feats = kwargs.get('feats', 'resnetv1')
         self.mod_feat = kwargs.get('mod_feat', 'fcg_average_vote')
+        self.mod_metrics = kwargs.get('mod_metrics', '')
         self.from_date = None
         self.to_date = None
         # Initialise variables
@@ -58,6 +59,8 @@ class ResStatistics:
 
     def _read_df_all_info_(self):
         read_path = Path(self.res_path) / f'{self.detector}-{self.feats}-{self.mod_feat}.pkl'
+        if self.mod_metrics == "sf":
+            read_path = Path(self.res_path) / f'{self.detector}-{self.feats}-{self.mod_feat}-{self.mod_metrics}.pkl'
         if read_path.is_file():
             self.res_df_all_info = pd.read_pickle(str(read_path))
 
@@ -71,7 +74,7 @@ class ResStatistics:
         df_date = pd.to_datetime(self.res_df_all_info['vid'], format='%Y_%m_%d_%H_%M')
         mask_dates = (df_date >= from_date) & (df_date <= to_date)
         self.res_df_all_info_from_to = self.res_df_all_info[mask_dates]
-        self.res_df_all_info_from_to['date'] = df_date[mask_dates]
+        self.res_df_all_info_from_to.loc[:, 'date'] = df_date[mask_dates]
         # Once filtered, take the minimum and maximum dates of the results
         self.from_date = self.res_df_all_info_from_to['date'].min().replace(hour=00, minute=00, second=00)  # From the beginning of the day
         self.to_date = self.res_df_all_info_from_to['date'].max().replace(hour=23, minute=59, second=59)  # To the end of the day
@@ -109,7 +112,7 @@ class ResStatistics:
             self.res_df_all_info_from_to = pd.concat((self.res_df_all_info_from_to, row_overall), axis=0)
 
     def _read_video_metadata_(self):
-        metadata_path = Path('/home/agirbau/work/politics/data/videos_metadata') / f'metadata_{self.channel}.csv'
+        metadata_path = Path('data/videos_metadata') / f'metadata_{self.channel}.csv'
         if metadata_path.exists():
             self.video_metadata = pd.read_csv(metadata_path)
 
@@ -701,7 +704,7 @@ class ResStatistics:
             df_plot = df_plot[mask_glob]
 
         # Case to plot the party leaders in the government and in the opposition
-        df_leaders = pd.read_excel('/home/agirbau/work/politics/data/party_leaders_mod.xlsx')
+        df_leaders = pd.read_excel('data/party_leaders_mod.xlsx')
         masks_gov_op_list = []
 
         if flag_gov_team or flag_op_team:
@@ -1060,6 +1063,7 @@ class ResStatistics:
         fig, ax = self._init_plot_()
         date_res = kwargs.get('date_res', 'month')
         dummy_val = kwargs.get('dummy', '.')  # To keep temporal scales between channels
+        plot_title = kwargs.get('plot_title', None)
         save_name = kwargs.get('save_name', None)
         flag_party = kwargs.get('flag_party', False)
         flag_gov_op_color = kwargs.get('flag_gov_op_color', False)

@@ -1066,6 +1066,7 @@ def main_train(flag_det=False):
         # Print metrics (from generate_latex_tables.py)
         metrics_generator = MetricsGenerator()
         kwargs = {
+            "feats": f"{args.feats}",
             "mod_feat": f"{args.mod_feat}-{MODIFIER}" if MODIFIER != "" else f"{args.mod_feat}"
         }
         res_statistics = metrics_generator.get_statistics_object(args.detector, args.channel, **kwargs)
@@ -1084,7 +1085,7 @@ if __name__ == "__main__":
 
     FROM_DATE = convert_str_to_date(args.from_date)
     TO_DATE = convert_str_to_date(args.to_date)
-    MODIFIER = "sf"  # For PA22 replication package
+    MODIFIER = args.modifier
     # RES_FILE = Path('data/results/results_sample.csv')
     RES_FILE = Path('data/results/results_haolin_segment_newformat.csv')
     # RES_FILE = Path('data/results/2012_12_04_19_00.csv')

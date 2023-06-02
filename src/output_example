@@ -1,0 +1,121 @@
+Metrics for channel-detector:
+Table 3:
+CNN-DFSD: Missed detections=4.62%
+CNN-MTCNN: Missed detections=5.36%
+CNN-YOLO: Missed detections=1.11%
+FOX-DFSD: Missed detections=3.88%
+FOX-MTCNN: Missed detections=4.6%
+FOX-YOLO: Missed detections=0.96%
+MSNBC-DFSD: Missed detections=5.16%
+MSNBC-MTCNN: Missed detections=6.36%
+MSNBC-YOLO: Missed detections=1.01%
+NHK-DFSD: Missed detections=3.13%
+NHK-MTCNN: Missed detections=2.84%
+NHK-YOLO: Missed detections=0.65%
+HODO-DFSD: Missed detections=6.28%
+HODO-MTCNN: Missed detections=8.55%
+HODO-YOLO: Missed detections=0.33%
+
+Metrics for channel-detector-classifier:
+Tables 4, 5, 6:
+CNN-DFSD-KNN: P=1.0, R=0.63, F1=0.773
+CNN-MTCNN-KNN: P=1.0, R=0.64, F1=0.779
+CNN-YOLO-KNN: P=1.0, R=0.69, F1=0.814
+CNN-DFSD-centroid: P=1.0, R=0.74, F1=0.85
+CNN-MTCNN-centroid: P=1.0, R=0.73, F1=0.844
+CNN-YOLO-centroid: P=1.0, R=0.8, F1=0.891
+CNN-DFSD-vote: P=1.0, R=0.78, F1=0.875
+CNN-MTCNN-vote: P=1.0, R=0.77, F1=0.869
+CNN-YOLO-vote: P=1.0, R=0.82, F1=0.902
+CNN-DFSD-vote (no tracking): P=1.0, R=0.65, F1=0.787
+CNN-MTCNN-vote (no tracking): P=1.0, R=0.65, F1=0.787
+CNN-YOLO-vote (no tracking): P=1.0, R=0.7, F1=0.827
+FOX-DFSD-KNN: P=1.0, R=0.66, F1=0.796
+FOX-MTCNN-KNN: P=1.0, R=0.64, F1=0.782
+FOX-YOLO-KNN: P=1.0, R=0.7, F1=0.822
+FOX-DFSD-centroid: P=1.0, R=0.76, F1=0.86
+FOX-MTCNN-centroid: P=1.0, R=0.74, F1=0.852
+FOX-YOLO-centroid: P=1.0, R=0.79, F1=0.883
+FOX-DFSD-vote: P=1.0, R=0.77, F1=0.867
+FOX-MTCNN-vote: P=1.0, R=0.75, F1=0.858
+FOX-YOLO-vote: P=1.0, R=0.8, F1=0.889
+FOX-DFSD-vote (no tracking): P=1.0, R=0.67, F1=0.804
+FOX-MTCNN-vote (no tracking): P=1.0, R=0.66, F1=0.793
+FOX-YOLO-vote (no tracking): P=1.0, R=0.71, F1=0.83
+MSNBC-DFSD-KNN: P=1.0, R=0.6, F1=0.75
+MSNBC-MTCNN-KNN: P=1.0, R=0.58, F1=0.732
+MSNBC-YOLO-KNN: P=1.0, R=0.65, F1=0.786
+MSNBC-DFSD-centroid: P=1.0, R=0.72, F1=0.837
+MSNBC-MTCNN-centroid: P=1.0, R=0.66, F1=0.793
+MSNBC-YOLO-centroid: P=1.0, R=0.73, F1=0.846
+MSNBC-DFSD-vote: P=1.0, R=0.73, F1=0.844
+MSNBC-MTCNN-vote: P=1.0, R=0.69, F1=0.814
+MSNBC-YOLO-vote: P=1.0, R=0.76, F1=0.865
+MSNBC-DFSD-vote (no tracking): P=1.0, R=0.61, F1=0.761
+MSNBC-MTCNN-vote (no tracking): P=1.0, R=0.59, F1=0.744
+MSNBC-YOLO-vote (no tracking): P=1.0, R=0.66, F1=0.797
+NHK-DFSD-KNN: P=0.81, R=0.75, F1=0.776
+NHK-MTCNN-KNN: P=0.79, R=0.74, F1=0.766
+NHK-YOLO-KNN: P=0.81, R=0.78, F1=0.793
+NHK-DFSD-centroid: P=0.77, R=0.79, F1=0.78
+NHK-MTCNN-centroid: P=0.79, R=0.82, F1=0.806
+NHK-YOLO-centroid: P=0.79, R=0.84, F1=0.816
+NHK-DFSD-vote: P=0.82, R=0.78, F1=0.799
+NHK-MTCNN-vote: P=0.86, R=0.78, F1=0.819
+NHK-YOLO-vote: P=0.84, R=0.81, F1=0.825
+NHK-DFSD-vote (no tracking): P=0.79, R=0.75, F1=0.769
+NHK-MTCNN-vote (no tracking): P=0.78, R=0.75, F1=0.765
+NHK-YOLO-vote (no tracking): P=0.8, R=0.78, F1=0.791
+HODO-DFSD-KNN: P=0.8, R=0.63, F1=0.701
+HODO-MTCNN-KNN: P=0.77, R=0.63, F1=0.696
+HODO-YOLO-KNN: P=0.79, R=0.66, F1=0.72
+HODO-DFSD-centroid: P=0.78, R=0.7, F1=0.741
+HODO-MTCNN-centroid: P=0.78, R=0.72, F1=0.749
+HODO-YOLO-centroid: P=0.75, R=0.75, F1=0.754
+HODO-DFSD-vote: P=0.85, R=0.7, F1=0.768
+HODO-MTCNN-vote: P=0.87, R=0.69, F1=0.768
+HODO-YOLO-vote: P=0.87, R=0.75, F1=0.804
+HODO-DFSD-vote (no tracking): P=0.78, R=0.63, F1=0.7
+HODO-MTCNN-vote (no tracking): P=0.76, R=0.64, F1=0.695
+HODO-YOLO-vote (no tracking): P=0.78, R=0.67, F1=0.722
+
+Republican primary (2016-02-01 to 2016-06-07)
+CNNW
+Donald_Trump: 6470 seconds
+Ted_Cruz: 3454 seconds
+Marco_Rubio: 1838 seconds
+John_Kasich: 1206 seconds
+FOXNEWSW
+Donald_Trump: 2670 seconds
+Ted_Cruz: 2330 seconds
+Marco_Rubio: 1025 seconds
+John_Kasich: 1246 seconds
+MSNBCW
+Donald_Trump: 4548 seconds
+Ted_Cruz: 3522 seconds
+Marco_Rubio: 1435 seconds
+John_Kasich: 1596 seconds
+
+
+Democratic primary (2015-04-12 to 2016-06-02)
+CNNW
+Hillary_Clinton: 9953 seconds
+Bernie_Sanders: 8941 seconds
+FOXNEWSW
+Hillary_Clinton: 3744 seconds
+Bernie_Sanders: 1828 seconds
+MSNBCW
+Hillary_Clinton: 9916 seconds
+Bernie_Sanders: 7362 seconds
+
+
+General election (2016-06-02 to 2016-11-08)
+CNNW
+Donald_Trump: 5064 seconds
+Hillary_Clinton: 3562 seconds
+FOXNEWSW
+Donald_Trump: 2204 seconds
+Hillary_Clinton: 2476 seconds
+MSNBCW
+Donald_Trump: 6425 seconds
+Hillary_Clinton: 6497 seconds
