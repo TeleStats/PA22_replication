@@ -54,7 +54,7 @@ def generate_tab3():
             if det_prev != '' and det_prev != k_det_:
                 # Write overall results after all channels
                 overall_row = ['Overall', det_prev]
-                row_w_ = '-'.join(overall_row) + f': {str(round(overall[k_det_], 2))}%'
+                row_w_ = '-'.join(overall_row) + f': {str(round(overall[det_prev], 2))}%'
                 w_file.write(row_w_ + '\n')
                 w_file.write('\n')
 
@@ -359,7 +359,6 @@ def generate_tab7():
                     w_file.write(row_w_ + '\n')
 
 
-
 def main():
     generate_tab3()
     df_456 = df_tabs_456()
@@ -384,6 +383,3 @@ if __name__ == "__main__":
     FILES_NAMES = ['tab3', 'tab4', 'tab5', 'tab6', 'tab7']
 
     main()
-
-
-

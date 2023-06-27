@@ -16,6 +16,7 @@ HODO-DFSD: Missed detections=6.28%
 HODO-MTCNN: Missed detections=8.55%
 HODO-YOLO: Missed detections=0.33%
 
+
 Metrics for channel-detector-classifier:
 Tables 4, 5, 6:
 CNN-DFSD-KNN: P=1.0, R=0.63, F1=0.773
@@ -79,6 +80,7 @@ HODO-DFSD-vote (no tracking): P=0.78, R=0.63, F1=0.7
 HODO-MTCNN-vote (no tracking): P=0.76, R=0.64, F1=0.695
 HODO-YOLO-vote (no tracking): P=0.78, R=0.67, F1=0.722
 
+
 Republican primary (2016-02-01 to 2016-06-07)
 CNNW
 Donald_Trump: 6470 seconds
@@ -119,3 +121,5 @@ Hillary_Clinton: 2476 seconds
 MSNBCW
 Donald_Trump: 6425 seconds
 Hillary_Clinton: 6497 seconds
+
+
