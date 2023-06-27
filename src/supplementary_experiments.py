@@ -166,11 +166,11 @@ def generate_threshs_df(channel, opt_correct=False):
     df = pd.DataFrame(rows_df, columns=cols_df)
     return df
 
-def si_fig1(dict_df):
+def sm_fig1(dict_df):
     # Fig1 (Precision)
     for k in dict_df.keys():
         # Plot the data
-        plt.plot(dict_df[k]['df']['Threshold'].values, dict_df[k]['df']['P'].values, marker=dict_df[k]['marker'], color=dict_df[k]['color'], label=k)
+        plt.plot(dict_df[k]['df']['Threshold'].values, dict_df[k]['df']['P'].values, marker=dict_df[k]['marker'], markersize=2, color=dict_df[k]['color'], label=k)
 
     plt.xlabel('Voting threshold')
     # Axis things
@@ -182,16 +182,16 @@ def si_fig1(dict_df):
 
     plt.legend()
     # plt.show()
-    out_file = PATH_SAVE / 'si_fig1.pdf'
+    out_file = PATH_SAVE / 'SM_fig1.pdf'
     plt.savefig(out_file, dpi=300)
     plt.close()
 
 
-def si_fig2(dict_df):
+def sm_fig2(dict_df):
     # Fig1 (Precision)
     for k in dict_df.keys():
         # Plot the data
-        plt.plot(dict_df[k]['df']['Threshold'].values, dict_df[k]['df']['R'].values, marker=dict_df[k]['marker'], color=dict_df[k]['color'], label=k)
+        plt.plot(dict_df[k]['df']['Threshold'].values, dict_df[k]['df']['R'].values, marker=dict_df[k]['marker'], markersize=2, color=dict_df[k]['color'], label=k)
 
     plt.xlabel('Voting threshold')
     # Axis things
@@ -203,16 +203,16 @@ def si_fig2(dict_df):
 
     plt.legend()
     # plt.show()
-    out_file = PATH_SAVE / 'si_fig2.pdf'
+    out_file = PATH_SAVE / 'SM_fig2.pdf'
     plt.savefig(out_file, dpi=300)
     plt.close()
 
 
-def si_fig3(dict_df):
+def sm_fig3(dict_df):
     # Fig3 (F1-score)
     for k in dict_df.keys():
         # Plot the data
-        plt.plot(dict_df[k]['df']['Threshold'].values, dict_df[k]['df']['F1'].values, marker=dict_df[k]['marker'], color=dict_df[k]['color'], label=k)
+        plt.plot(dict_df[k]['df']['Threshold'].values, dict_df[k]['df']['F1'].values, marker=dict_df[k]['marker'], markersize=2, color=dict_df[k]['color'], label=k)
 
     plt.xlabel('Voting threshold')
     # Axis things
@@ -224,9 +224,53 @@ def si_fig3(dict_df):
 
     plt.legend()
     # plt.show()
-    out_file = PATH_SAVE / 'si_fig3.pdf'
+    out_file = PATH_SAVE / 'SM_fig3.pdf'
     plt.savefig(out_file, dpi=300)
     plt.close()
+
+
+def sm_tab1(dict_df):
+    out_file = PATH_SAVE / 'SM_tab1.txt'
+
+    with open(out_file, 'w', newline='\n') as w_file:
+        for k in US_CHANNELS:
+            df = dict_df[k]['df']
+
+            w_file.write(f'{k}: \n')
+            w_file.write(f'Threshold\tP\tR\tF1\n')
+
+            for (index_label, row_series) in df.iterrows():
+                thresh_ = row_series['Threshold']
+                p_ = round(row_series['P'], 2)
+                r_ = round(row_series['R'], 2)
+                f1_ = round(row_series['F1'], 3)
+
+                row_w_ = f'\t{thresh_}\t{p_}\t{r_}\t{f1_}'
+                w_file.write(row_w_ + '\n')
+
+            w_file.write('\n')
+
+
+def sm_tab2(dict_df):
+    out_file = PATH_SAVE / 'SM_tab2.txt'
+
+    with open(out_file, 'w', newline='\n') as w_file:
+        for k in JP_CHANNELS:
+            df = dict_df[k]['df']
+
+            w_file.write(f'{k}: \n')
+            w_file.write(f'Threshold\tP\tR\tF1\n')
+
+            for (index_label, row_series) in df.iterrows():
+                thresh_ = row_series['Threshold']
+                p_ = round(row_series['P'], 2)
+                r_ = round(row_series['R'], 2)
+                f1_ = round(row_series['F1'], 3)
+
+                row_w_ = f'\t{thresh_}\t{p_}\t{r_}\t{f1_}'
+                w_file.write(row_w_ + '\n')
+
+            w_file.write('\n')
 
 
 def main():
@@ -246,9 +290,14 @@ def main():
         dict_df[chn_re]['color'] = color
         dict_df[chn_re]['marker'] = 'o'
 
-    si_fig1(dict_df)
-    si_fig2(dict_df)
-    si_fig3(dict_df)
+    # Generate figures
+    sm_fig1(dict_df)
+    sm_fig2(dict_df)
+    sm_fig3(dict_df)
+
+    # Generate tables
+    sm_tab1(dict_df)
+    sm_tab2(dict_df)
 
 
 if __name__ == "__main__":
