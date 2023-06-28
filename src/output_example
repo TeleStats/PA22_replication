@@ -123,3 +123,29 @@ Donald_Trump: 6425 seconds
 Hillary_Clinton: 6497 seconds
 
 
+Metrics for SM channel-detector-classifier:
+SM Table 3:
+facenet
+CNN-MTCNN-vote: P=1.0, R=0.7, F1=0.826
+resnetv1
+CNN-MTCNN-vote: P=1.0, R=0.77, F1=0.869
+facenet
+CNN-MTCNN-vote (no tracking): P=1.0, R=0.54, F1=0.698
+resnetv1
+CNN-MTCNN-vote (no tracking): P=1.0, R=0.65, F1=0.787
+facenet
+FOX-MTCNN-vote: P=1.0, R=0.67, F1=0.802
+resnetv1
+FOX-MTCNN-vote: P=1.0, R=0.75, F1=0.858
+facenet
+FOX-MTCNN-vote (no tracking): P=1.0, R=0.49, F1=0.655
+resnetv1
+FOX-MTCNN-vote (no tracking): P=1.0, R=0.66, F1=0.793
+facenet
+MSNBC-MTCNN-vote: P=1.0, R=0.62, F1=0.762
+resnetv1
+MSNBC-MTCNN-vote: P=1.0, R=0.69, F1=0.814
+facenet
+MSNBC-MTCNN-vote (no tracking): P=1.0, R=0.47, F1=0.642
+resnetv1
+MSNBC-MTCNN-vote (no tracking): P=1.0, R=0.59, F1=0.744
