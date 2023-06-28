@@ -273,7 +273,7 @@ def generate_tab7():
                     continue
 
                 if row[0] in HEADERS:
-                    if row[0] in HEADERS[2:]:
+                    if row[0] in HEADERS[2:4]:
                         # Build overall if current election is different than previous
                         if flag_found_header:
                             df = pd.DataFrame(rows_df, columns=cols)
@@ -359,6 +359,138 @@ def generate_tab7():
                     w_file.write(row_w_ + '\n')
 
 
+def df_tab_sm3():
+    # Super ad hoc
+    rows_df = []
+    cols = ['chn', 'feats', 'det', 'cls', 'P', 'R', 'F1']
+    curr_feat = ''
+    flag_found_header = False
+
+    with open(output_file, 'r') as r_file:
+        reader = csv.reader(r_file, delimiter=':')
+        for row in reader:
+            if len(row) == 0:
+                continue
+
+            if row[0] in HEADERS:
+                if row[0] == HEADERS[5]:
+                    flag_found_header = True
+                else:
+                    flag_found_header = False
+                    continue
+
+            else:
+                if flag_found_header:
+                    # Missed detections experiment
+                    info_config = row[0].split('-')
+                    if info_config[0] == "Metrics for SM channel":
+                        continue
+
+                    if info_config[0] in FEATS:
+                        curr_feat = info_config[0]
+                        continue
+
+                    info_res = row[1].split(',')
+                    p_ = float(info_res[0].split('P=')[-1])
+                    r_ = float(info_res[1].split('R=')[-1])
+                    f1_ = float(info_res[2].split('F1=')[-1])
+                    row_df_ = [info_config[0], curr_feat, info_config[1], info_config[2], p_, r_, f1_]  # [chn, det, res]
+
+                    rows_df.append(row_df_)
+
+    df = pd.DataFrame(rows_df, columns=cols)
+    df = df.sort_values(by=['feats', 'cls', 'det'])
+
+    return df
+
+def generate_SMtab3(df_all):
+    # Super ad hoc
+    # US data
+    mask_us = df_all['chn'].isin(US_CHANNELS)
+    df = df_all[mask_us]
+    # classifiers
+    mask_cls = df['cls'].isin(CLASSIFIERS[2:4])
+    df = df[mask_cls]
+
+    # Process df to compute overall results
+    overall = df.groupby(['feats', 'cls', 'det']).mean().reset_index()
+    row_hong = ['facenet', 'MTCNN', 'classifier', 0.96, 0.64, 0.768]
+    df_hong = pd.DataFrame([row_hong], columns=['feats', 'det', 'cls', 'P', 'R', 'F1'])
+    overall = pd.concat([overall, df_hong])
+    overall = overall.sort_values(by=['feats', 'cls', 'det'])
+
+    # Save to file
+    out_file = PATH_SAVE / FILES_NAMES[5]
+
+    with open(out_file, 'w', newline='\n') as w_file:
+        cls_prev = ''
+        feat_prev = ''
+
+        # Print Hong's results first
+        # Print header
+        # Ours:
+        # CNN-Clustering-MTCNN-FaceNetv1-Tracking: P=X, R=Y, F1=Z
+        sys_name_ = "Hong et al. (2021)"
+        technique_ = "Classifier"
+        det_ = "MTCNN"
+        feat_ = "FaceNet_v1"
+        track_ = ""
+
+        row_ = [sys_name_, technique_, det_, feat_, track_]
+        row_w_ = '-'.join(row_)
+        w_file.write(row_w_ + '\n')
+
+        # Print Overall
+        mask_overall = (overall['cls'] == "classifier") & (overall['feats'] == "facenet")
+        p_overall_ = round(overall[mask_overall]['P'].to_list()[0], 2)
+        r_overall_ = round(overall[mask_overall]['R'].to_list()[0], 2)
+        f1_overall_ = round(overall[mask_overall]['F1'].to_list()[0], 3)
+        overall_row = ['Overall']
+        row_w_ = '-'.join(overall_row) + f': P={p_overall_}, R={r_overall_}, F1={f1_overall_}'
+        w_file.write(row_w_ + '\n')
+
+
+        for (index_label, row_series) in df.iterrows():
+            k_chn_ = row_series['chn']
+            k_feat_ = row_series['feats']
+            k_det_ = row_series['det']
+            k_cls_ = row_series['cls']
+            p_ = round(row_series['P'], 2)
+            r_ = round(row_series['R'], 2)
+            f1_ = round(row_series['F1'], 3)
+
+            if cls_prev != k_cls_ or feat_prev != k_feat_:
+                # Print header
+                w_file.write('\n')
+                # Ours:
+                # CNN-Clustering-MTCNN-FaceNetv1-Tracking: P=X, R=Y, F1=Z
+                sys_name_ = "Ours" if k_cls_ != "classifier" else "Hong et al. (2021)"
+                technique_ = "Clustering" if k_cls_ != "classifier" else "Classifier"
+                det_ = k_det_
+                feat_ = "FaceNet_v1" if k_feat_ == "facenet" else "FaceNet_v2"
+                track_ = "Tracking" if k_cls_ == CLASSIFIERS[2] else "No_Tracking"
+
+                row_ = [sys_name_, technique_, det_, feat_, track_]
+                row_w_ = '-'.join(row_)
+                w_file.write(row_w_ + '\n')
+
+                # Print Overall
+                mask_overall = (overall['cls'] == k_cls_) & (overall['feats'] == k_feat_)
+                p_overall_ = round(overall[mask_overall]['P'].to_list()[0], 2)
+                r_overall_ = round(overall[mask_overall]['R'].to_list()[0], 2)
+                f1_overall_ = round(overall[mask_overall]['F1'].to_list()[0], 3)
+                overall_row = ['Overall']
+                row_w_ = '-'.join(overall_row) + f': P={p_overall_}, R={r_overall_}, F1={f1_overall_}'
+                w_file.write(row_w_ + '\n')
+
+                cls_prev = k_cls_
+                feat_prev = k_feat_
+
+            # Print channel
+            row_w_ = f"{k_chn_}: P={p_}, R={r_}, F1={f1_}"
+            w_file.write(row_w_ + '\n')
+
+
 def main():
     generate_tab3()
     df_456 = df_tabs_456()
@@ -366,6 +498,8 @@ def main():
     generate_tab5(df_456)
     generate_tab6(df_456)
     generate_tab7()
+    df_sm3 = df_tab_sm3()
+    generate_SMtab3(df_sm3)
 
 
 if __name__ == "__main__":
@@ -375,11 +509,13 @@ if __name__ == "__main__":
     JP_CHANNELS = ['NHK', 'HODO']
     DETECTORS = ['DFSD', 'MTCNN', 'YOLO']
     CLASSIFIERS = ['KNN', 'centroid', 'vote', 'vote (no tracking)']
+    FEATS = ['facenet', 'resnetv1']
 
     # Output info
     HEADERS = ['Table 3', 'Tables 4, 5, 6', 'Republican primary (2016-02-01 to 2016-06-07)',
-               'Democratic primary (2015-04-12 to 2016-06-02)', 'General election (2016-06-02 to 2016-11-08)']
+               'Democratic primary (2015-04-12 to 2016-06-02)', 'General election (2016-06-02 to 2016-11-08)',
+               'SM Table 3']
     PATH_SAVE = Path('.')
-    FILES_NAMES = ['tab3', 'tab4', 'tab5', 'tab6', 'tab7']
+    FILES_NAMES = ['tab3.txt', 'tab4.txt', 'tab5.txt', 'tab6.txt', 'tab7.txt', 'SM_tab3.txt']
 
     main()

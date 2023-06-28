@@ -299,6 +299,7 @@ def main():
 
                     kwargs = {
                         "mod_feat": mod_feat,
+                        "feats": feat,
                         "from_date": "2000_01_01" if channel != "news7-lv" else "2013_01_01"
                     }
                     res_statistics = metrics_generator.get_statistics_object(detector, channel, **kwargs)

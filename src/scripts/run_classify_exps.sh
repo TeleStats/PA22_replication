@@ -9,12 +9,12 @@ export PYTHONPATH="$PYTHONPATH":"$python_politics"
 cd "$politics_path"
 # Models path
 # For News7 and Hodo station
-#channels=("news7-lv" "hodost-lv")
-#models_path="$politics_path/data/faces_politicians"
+channels=("news7-lv" "hodost-lv")
+models_path="$politics_path/data/faces_politicians"
 # For CNNW, FOXNEWSW, MSNBCW
-channels=("CNNW" "FOXNEWSW" "MSNBCW")
+#channels=("CNNW" "FOXNEWSW" "MSNBCW")
 #channels=("CNNW")
-models_path="$politics_path/data/faces_us_individuals"
+#models_path="$politics_path/data/faces_us_individuals"
 
 # Basic settings
 mode="train"
@@ -54,7 +54,7 @@ for chan in "${channels[@]}"; do
 
       echo "Running classification for $mode from $from_date to $to_date with $det-$feats-$mod..."
 #      "$python_politics" "$politics_path"/src/face_classifier_politics.py "$mode" "$chan" --models_path "$models_path" --detector "$det" --feats "$feats" --mod_feat "$mod" --from_date "$from_date" --to_date "$to_date" --extract_embs
-      "$python_politics" "$politics_path"/src/face_classifier.py "$mode" "$chan" --models_path "$models_path" --detector "$det" --feats "$feats" --mod_feat "$mod" --from_date "$from_date" --to_date "$to_date" --extract_embs --perc_votes "$perc_vote"
+      "$python_politics" "$politics_path"/src/face_classifier.py "$mode" "$chan" --models_path "$models_path" --detector "$det" --feats "$feats" --mod_feat "$mod" --from_date "$from_date" --to_date "$to_date" --extract_embs
       echo "...done!"
       wait
 

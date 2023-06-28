@@ -237,7 +237,7 @@ def sm_tab1(dict_df):
             df = dict_df[k]['df']
 
             w_file.write(f'{k}: \n')
-            w_file.write(f'Threshold\tP\tR\tF1\n')
+            w_file.write(f'Threshold   P    R    F1\n')
 
             for (index_label, row_series) in df.iterrows():
                 thresh_ = row_series['Threshold']
@@ -245,7 +245,7 @@ def sm_tab1(dict_df):
                 r_ = round(row_series['R'], 2)
                 f1_ = round(row_series['F1'], 3)
 
-                row_w_ = f'\t{thresh_}\t{p_}\t{r_}\t{f1_}'
+                row_w_ = f'{thresh_:<12}{p_:<5}{r_:<5}{f1_:<5}'
                 w_file.write(row_w_ + '\n')
 
             w_file.write('\n')
@@ -259,7 +259,7 @@ def sm_tab2(dict_df):
             df = dict_df[k]['df']
 
             w_file.write(f'{k}: \n')
-            w_file.write(f'Threshold\tP\tR\tF1\n')
+            w_file.write(f'Threshold   P    R    F1\n')
 
             for (index_label, row_series) in df.iterrows():
                 thresh_ = row_series['Threshold']
@@ -267,7 +267,7 @@ def sm_tab2(dict_df):
                 r_ = round(row_series['R'], 2)
                 f1_ = round(row_series['F1'], 3)
 
-                row_w_ = f'\t{thresh_}\t{p_}\t{r_}\t{f1_}'
+                row_w_ = f'{thresh_:<12}{p_:<5}{r_:<5}{f1_:<5}'
                 w_file.write(row_w_ + '\n')
 
             w_file.write('\n')
@@ -318,6 +318,5 @@ if __name__ == "__main__":
     modifier = 'sf'
 
     PATH_SAVE = Path('.')
-    FILES_NAMES = ['si_fig1', 'si_fig2', 'si_fig3', 'si_tab1', 'si_tab2']
 
     main()
