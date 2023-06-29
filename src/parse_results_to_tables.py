@@ -273,7 +273,7 @@ def generate_tab7():
                     continue
 
                 if row[0] in HEADERS:
-                    if row[0] in HEADERS[2:4]:
+                    if row[0] in HEADERS[2:5]:
                         # Build overall if current election is different than previous
                         if flag_found_header:
                             df = pd.DataFrame(rows_df, columns=cols)
@@ -315,6 +315,10 @@ def generate_tab7():
                         continue
 
                 else:
+                    if row[0] == "Metrics for SM channel-detector-classifier":
+                        # Next info incoming
+                        break
+
                     if flag_found_header:
                         # Missed detections experiment
                         info_config = row[0]
